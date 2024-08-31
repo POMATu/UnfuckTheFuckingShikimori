@@ -1,9 +1,11 @@
 // ==UserScript==
 // @name         Unfuck The Fucking Shikimori
 // @namespace    https://shikimori.one/
-// @version      0.9
+// @version      2024-08-31.3
 // @description  1337 domination tools over normies
 // @author       nikola2222,pomatu,SoyGPT
+// @updateURL    https://github.com/POMATu/UnfuckTheFuckingShikimori/blob/slave/unfuck.js
+// @downloadURL  https://github.com/POMATu/UnfuckTheFuckingShikimori/blob/slave/unfuck.js
 // @match        *://shikimori.org/*
 // @match        *://shikimori.one/*
 // @match        *://shikimori.me/*
