@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Unfuck The Fucking Shikimori
 // @namespace    https://shikimori.one/
-// @version      2024-08-28
+// @version      2024-08-31.2
 // @description  1337 domination tools over normies
 // @author       nikola2222,pomatu,SoyGPT
 // @match        *://shikimori.org/*
@@ -41,21 +41,50 @@ async function  unfuckLooper() {
               var style = document.createElement('style');
               style.id = 'dynamic-textarea-styles';
               style.innerHTML = `
-                  textarea {
-                      transition: background-color 0.3s ease; /* Adjust duration and easing function as needed */
-                  }
+                 .unfucked textarea {
+                       transition: background-color 0.3s ease;
+                 }
 
               `;
               document.head.appendChild(style);
           }
 
+    // based codebase
+    async function findMats(textArea) {
+        var mats = [];
+        try {
+            const response = await fetch('https://raw.githubusercontent.com/shikimori/shikimori/master/config/app/abusive_words.yml');
 
+            // Check if the response is successful (status code 200-299)
+            if (!response.ok) {
+                window.flash.error(`Не могу загрузить список мата`);
+                throw new Error('Network response was not ok ' + response.statusText);
+            }
+            let text = await response.text(); // Extract the response body as plain text
 
+            let textAreaLc = textArea.toLowerCase();
+            let arrayMats = text.replace(/[\n\r]/g, '').split('- ');
+            for (var i = 0; i < arrayMats.length; i++) {
+                if (arrayMats[i].length > 0 && textAreaLc.includes(arrayMats[i])) {
+
+                    if (UNFUCK_DEBUG) console.log("Found initial mat:" + arrayMats[i]);
+
+                    mats.push(arrayMats[i]);
+                }
+            }
+
+        } catch (error) {
+            // Handle errors here
+            console.error("There was a problem with the abusive words processing:", error);
+            window.flash.error(`Не могу обработать список мата`);
+        }
+        return mats;
+    }
 
 
         $('.simple_form.b-form').each(function() {
             // Check if the current .simple_form.b-form element has the 'colors-darkened' class
-            if (!$(this).hasClass('colors-darkened')) {
+            if (!$(this).hasClass('unfucked')) {
 
               		var rootOfForm = this;
 
@@ -87,11 +116,26 @@ async function  unfuckLooper() {
                       let textAreaElement = $(rootOfForm).find('.editor-area');
         			  let matArea = textAreaElement.val();
 
-                      // sometimes i wonder what i am doing with my life
-                      matArea = matArea.replace(/([а-яА-Я0-9a-zA-Z]+)/g, '\u200B$1\u200B');
+                      if (matArea.length <= 0) {
+                          window.flash.error('В форме отсутствует текст');
+                          return;
+                      }
 
-                      textAreaElement.val(matArea);
-                    	window.flash.notice('Метод обхода применен');
+                      // sometimes i wonder what i am doing with my life
+                      findMats(matArea).then(mats => {
+                          for (const mat of mats) {
+                              // Create a dynamic regex pattern for each item
+                              const regex = new RegExp(`(${mat})`, 'ig');
+
+                              // Perform the replacement
+                              matArea = matArea.replace(regex, '\u200B$1\u200B');
+                          }
+
+                          textAreaElement.val(matArea);
+                          window.flash.notice('Метод обхода применен');
+                          textAreaElement.hide().fadeIn();
+                          textAreaElement.focus();
+                      });
 
                   });
 
@@ -122,7 +166,7 @@ async function  unfuckLooper() {
                 });
 
                 // Add the class to the current .simple_form.b-form element to mark that the operation has been performed
-                $(this).addClass('colors-darkened');
+                $(this).addClass('unfucked');
             }
         });
 
@@ -179,27 +223,10 @@ async function  unfuckLooper() {
                     if (UNFUCK_DEBUG) console.log("Ayase menstruation found");
                     window.flash.error(`Удали мат`);
                     // 🎵 i ruin your game 🎶
-                    fetch('https://raw.githubusercontent.com/shikimori/shikimori/master/config/app/abusive_words.yml')
-                    .then(response => {
-                        if (!response.ok) {
-                            window.flash.error(`Не могу загрузить список мата`);
-                            throw new Error('Network response was not ok ' + response.statusText);
-                        }
-                        return response.text(); // Extract the response body as plain text
-                    })
-                    .then(text => {
+                    findMats(textArea)
+                    .then(mats => {
                         // 🎵 get out of way 🎶
                         let textAreaLc = textArea.toLowerCase();
-                        let arrayMats = text.replace(/[\n\r]/g, '').split('- ');
-                        var mats = [];
-                        for (var i = 0; i < arrayMats.length; i++) {
-                            if (arrayMats[i].length > 0 && textAreaLc.includes(arrayMats[i])) {
-
-                                if (UNFUCK_DEBUG) console.log("Found initial mat:" + arrayMats[i]);
-
-                                mats.push(arrayMats[i]);
-                            }
-                        }
                         // 🎵 ayase go fuck 🎶
                         for (var i = 0; i < mats.length; i++) {
 
@@ -222,7 +249,7 @@ async function  unfuckLooper() {
                         if (mats.length > 0) {
                             window.flash.notice(`Найденный мат: ` + mats.join(','));
 
-														try {
+							try {
                               textAreaElement[0].focus();
 
                               var matWord = mats[Math.floor(Math.random() * mats.length)];
@@ -236,8 +263,8 @@ async function  unfuckLooper() {
                         }
                     })
                     .catch(error => {
-                        console.error("There was a problem with the abusive words fetch:", error);
-                        window.flash.error(`Не могу загрузить список мата`);
+                        console.error("There was a problem with the abusive words search:", error);
+                        window.flash.error(`Ошибка при поиске по списку мата`);
                     });
 
 
