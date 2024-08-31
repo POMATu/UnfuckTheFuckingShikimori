@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Unfuck The Fucking Shikimori
 // @namespace    https://shikimori.one/
-// @version      2024-08-31.1
+// @version      2024-08-28
 // @description  1337 domination tools over normies
 // @author       nikola2222,pomatu,SoyGPT
 // @match        *://shikimori.org/*
@@ -88,7 +88,7 @@ async function  unfuckLooper() {
         			  let matArea = textAreaElement.val();
 
                       // sometimes i wonder what i am doing with my life
-                      matArea = matArea.replace(/([а-яА-Я0-9a-zA-Z])/g, '\u200B$1\u200B');
+                      matArea = matArea.replace(/([а-яА-Я0-9a-zA-Z]+)/g, '\u200B$1\u200B');
 
                       textAreaElement.val(matArea);
                     	window.flash.notice('Метод обхода применен');
