@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Unfuck The Fucking Shikimori
 // @namespace    https://shikimori.one/
-// @version      2024.08.31.7
+// @version      2024.08.31.8
 // @description  1337 domination tools over normies
 // @author       nikola2222,pomatu,SoyGPT
 // @updateURL    https://github.com/POMATu/UnfuckTheFuckingShikimori/blob/slave/unfuck.js
@@ -33,7 +33,7 @@ const SUBMIT_ON_PREVIEW_ERROR = true;
 
 async function  unfuckLooper() {
 
-    if (window.location.href.includes("/dialogs/")) { if (UNFUCK_DEBUG) console.log("Ayase not working in dialogs"); else return; }
+    if (window.location.href.includes("/dialogs/")) { if (UNFUCK_DEBUG) console.log("Ayase not working in dialogs"); else { return; } }
                 if (window.location.href.includes("/edit/styles")) return;
 
          // START: STYLING NOODLES block
@@ -284,7 +284,7 @@ async function  unfuckLooper() {
                               textAreaElement[0].focus();
 
                               var matWord = mats[Math.floor(Math.random() * mats.length)];
-                              var matStart = textArea.indexOf(matWord);
+                              var matStart = textAreaLc.indexOf(matWord);
                               var matEnd = matStart + matWord.length;
 
                               textAreaElement[0].setSelectionRange(matStart, matEnd);
@@ -295,7 +295,7 @@ async function  unfuckLooper() {
                     })
                     .catch(error => {
                         console.error("There was a problem with the abusive words search:", error);
-                        unfError(`Ошибка при поиске по списку мата`);
+                        unfError(`Ошибка при поиске по списку мата`, error);
                     });
 
 
