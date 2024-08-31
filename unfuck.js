@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Unfuck The Fucking Shikimori
 // @namespace    https://shikimori.one/
-// @version      2024.08.31.6
+// @version      2024.08.31.7
 // @description  1337 domination tools over normies
 // @author       nikola2222,pomatu,SoyGPT
 // @updateURL    https://github.com/POMATu/UnfuckTheFuckingShikimori/blob/slave/unfuck.js
@@ -28,7 +28,7 @@ injectUnfuckPayload(function() {
 
 
 
-const UNFUCK_DEBUG = true;
+const UNFUCK_DEBUG = false;
 const SUBMIT_ON_PREVIEW_ERROR = true;
 
 async function  unfuckLooper() {
@@ -59,7 +59,7 @@ async function  unfuckLooper() {
 
             // Check if the response is successful (status code 200-299)
             if (!response.ok) {
-                window.flash.error(`Не могу загрузить список мата`);
+                unfError(`Не могу загрузить список мата`);
                 throw new Error('Network response was not ok ' + response.statusText);
             }
             let text = await response.text(); // Extract the response body as plain text
@@ -78,9 +78,34 @@ async function  unfuckLooper() {
         } catch (error) {
             // Handle errors here
             console.error("There was a problem with the abusive words processing:", error);
-            window.flash.error(`Не могу обработать список мата`);
+            unfError(`Не могу обработать список мата`);
         }
         return mats;
+    }
+
+    function unfGetGravity() {
+       if (window.matchMedia("(max-width: 1024px)").matches) {
+           return "bottom";
+       }
+        return "top";
+    }
+
+    function unfError(message, err) {
+        window.flash.error(message, {
+            gravity: unfGetGravity(), // `top` or `bottom`
+            position: "right", // `left`, `center` or `right`
+            stopOnFocus: true, // Prevents dismissing of toast on hover
+        });
+        if (UNFUCK_DEBUG) console.log(message, err);
+    }
+
+    function unfNotice(message) {
+        window.flash.notice(message, {
+            gravity: unfGetGravity(), // `top` or `bottom`
+            position: "right", // `left`, `center` or `right`
+            stopOnFocus: true, // Prevents dismissing of toast on hover
+        });
+        if (UNFUCK_DEBUG) console.log(message);
     }
 
 
@@ -88,7 +113,7 @@ async function  unfuckLooper() {
             // Check if the current .simple_form.b-form element has the 'colors-darkened' class
             if (!$(this).hasClass('unfucked')) {
 
-              	var rootOfForm = this;
+                var rootOfForm = this;
 
                 if ($(this).find('.controls').find('aside.markers').length === 0) {
                     // Append <aside class="markers"> if it does not exist
@@ -112,18 +137,18 @@ async function  unfuckLooper() {
                     img.style.margin = 'auto';
                   //img.style.position = 'absolute';
                   //img.style.marginLeft = '30px'; // Adjust the margin-right as needed
-           				//img.style.marginTop = '-14px';
+                  //img.style.marginTop = '-14px';
                   img.style.display = 'none';
 
                   img.style.filter = 'saturate(0)';
-									span.appendChild(img);
+                  span.appendChild(img);
 
                   img.addEventListener('click', () => {
                       let textAreaElement = $(rootOfForm).find('.editor-area');
-        			  let matArea = textAreaElement.val();
+                let matArea = textAreaElement.val();
 
                       if (matArea.length <= 0) {
-                          window.flash.error('В форме отсутствует текст');
+                          unfError('В форме отсутствует текст');
                           return;
                       }
 
@@ -138,16 +163,16 @@ async function  unfuckLooper() {
                           }
 
                           textAreaElement.val(matArea);
-                          window.flash.notice('Метод обхода применен');
+                          unfNotice('Метод обхода применен');
                           textAreaElement.hide().fadeIn();
                           textAreaElement.focus();
                       });
 
                   });
 
-                  		$(this).prepend(span);
-                  		$(img).hide().fadeIn();
-           				});
+                      $(this).prepend(span);
+                      $(img).hide().fadeIn();
+                  });
 
                 // Get all textarea elements within the current .simple_form.b-form
                 $(this).find('textarea').each(function() {
@@ -195,7 +220,7 @@ async function  unfuckLooper() {
 
     $('.simple_form.b-form').off('submit').on('submit', function(e) {
 
-				let textAreaElement = $(this).find('.editor-area');
+        let textAreaElement = $(this).find('.editor-area');
         let textArea = textAreaElement.val();
 
         let jsonObject = {
@@ -227,7 +252,7 @@ async function  unfuckLooper() {
                 if (response.includes(minMatAnchor) && response.toLowerCase().includes(ayaseMenstruationColor) ) {
                     // 🎵 i do everyday 🎶
                     if (UNFUCK_DEBUG) console.log("Ayase menstruation found");
-                    window.flash.error(`Удали мат`);
+                    unfError(`Удали мат`);
                     // 🎵 i ruin your game 🎶
                     findMats(textArea)
                     .then(mats => {
@@ -253,16 +278,16 @@ async function  unfuckLooper() {
                         mats = mats.filter(item => item !== '');
                         // 🎵 your joke getting lame...
                         if (mats.length > 0) {
-                            window.flash.notice(`Найденный мат: ` + mats.join(','));
+                            unfNotice(`Найденный мат: ` + mats.join(','));
 
-							try {
+              try {
                               textAreaElement[0].focus();
 
                               var matWord = mats[Math.floor(Math.random() * mats.length)];
                               var matStart = textArea.indexOf(matWord);
                               var matEnd = matStart + matWord.length;
 
-                            	textAreaElement[0].setSelectionRange(matStart, matEnd);
+                              textAreaElement[0].setSelectionRange(matStart, matEnd);
 
                             } catch {}
 
@@ -270,7 +295,7 @@ async function  unfuckLooper() {
                     })
                     .catch(error => {
                         console.error("There was a problem with the abusive words search:", error);
-                        window.flash.error(`Ошибка при поиске по списку мата`);
+                        unfError(`Ошибка при поиске по списку мата`);
                     });
 
 
@@ -286,10 +311,10 @@ async function  unfuckLooper() {
             error: function(xhr, status, error) {
                 console.error("Error:", error);
                 if (SUBMIT_ON_PREVIEW_ERROR) {
-                  window.flash.error(`Не могу запросить предпросмотр, отправляю`);
+                  unfError(`Не могу запросить предпросмотр, отправляю`);
                     $(_this).callRemote();
                 } else {
-                  window.flash.error(`Не могу запросить предпросмотр, отмена`);
+                  unfError(`Не могу запросить предпросмотр, отмена`);
                 }
             }
         });
