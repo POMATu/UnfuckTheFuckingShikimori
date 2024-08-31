@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Unfuck The Fucking Shikimori
 // @namespace    https://shikimori.one/
-// @version      2024.08.31.5
+// @version      2024.08.31.6
 // @description  1337 domination tools over normies
 // @author       nikola2222,pomatu,SoyGPT
 // @updateURL    https://github.com/POMATu/UnfuckTheFuckingShikimori/blob/slave/unfuck.js
@@ -88,8 +88,12 @@ async function  unfuckLooper() {
             // Check if the current .simple_form.b-form element has the 'colors-darkened' class
             if (!$(this).hasClass('unfucked')) {
 
-              		var rootOfForm = this;
+              	var rootOfForm = this;
 
+                if ($(this).find('.controls').find('aside.markers').length === 0) {
+                    // Append <aside class="markers"> if it does not exist
+                    $(this).find('.controls').append('<aside class="markers"></aside>');
+                }
                   $(this).find('.markers').each(function () {
 
 
