@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Unfuck The Fucking Shikimori
 // @namespace    https://shikimori.one/
-// @version      2024-08-28
+// @version      2024-08-31.1
 // @description  1337 domination tools over normies
 // @author       nikola2222,pomatu,SoyGPT
 // @match        *://shikimori.org/*
