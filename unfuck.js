@@ -29,7 +29,7 @@ injectUnfuckPayload(function() {
 
 
 const UNFUCK_DEBUG = false;
-const SUBMIT_ON_PREVIEW_ERROR = true;
+const SUBMIT_ON_PREVIEW_ERROR = false; // i think this needs to be disabled by default for production, cuz sometimes these errors happen
 
 async function  unfuckLooper() {
 
